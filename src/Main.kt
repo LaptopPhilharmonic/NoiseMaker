@@ -6,7 +6,19 @@ fun main() {
 
     with(NoiseMaker()) {
         voice {
-            tone(tonic, 1000)
+            for (fundamental in 3..5) {
+                for (i in 1..5) {
+                    tone(tonic.overtone(fundamental).overtone(i).undertone(4), 500)
+                }
+            }
+        }
+
+        voice {
+            for (fundamental in 3..5) {
+                for (i in 5 downTo 1) {
+                    tone(tonic.overtone(fundamental).overtone(i).undertone(4), 500)
+                }
+            }
         }
     }
 }

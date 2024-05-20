@@ -1,6 +1,5 @@
 package uk.laptopphilharmonic.noisemaker
 
-import SinSynth.playTone
 import uk.laptopphilharmonic.noisemaker.snyth.SineSynth
 import uk.laptopphilharmonic.noisemaker.snyth.Synth
 import javax.sound.sampled.AudioSystem
