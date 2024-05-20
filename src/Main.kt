@@ -1,22 +1,24 @@
 import uk.laptopphilharmonic.noisemaker.NoiseMaker
-import uk.laptopphilharmonic.noisemaker.hz
+import uk.laptopphilharmonic.noisemaker.frequency.OctaveRange
+import uk.laptopphilharmonic.noisemaker.frequency.hz
 
 fun main() {
-    val tonic = 440.hz
+    val tonic = 110.hz
+    val octave = OctaveRange(440.hz)
 
     with(NoiseMaker()) {
         voice {
-            for (fundamental in 3..5) {
-                for (i in 1..5) {
-                    tone(tonic.overtone(fundamental).overtone(i).undertone(4), 500)
+            for (fundamental in listOf(2.0, 3.0, 2.0, 1.0 / 3.0, 2.0, 3.0, 2.0)) {
+                for (i in 2..5) {
+                    tone(tonic.overtone(fundamental).overtone(i).inOctave(octave), 500)
                 }
             }
         }
 
         voice {
-            for (fundamental in 3..5) {
-                for (i in 5 downTo 1) {
-                    tone(tonic.overtone(fundamental).overtone(i).undertone(4), 500)
+            for (fundamental in listOf(2.0, 3.0, 2.0, 1.0 / 3.0, 2.0, 3.0, 2.0)) {
+                for (i in 5 downTo 2) {
+                    tone(tonic.overtone(fundamental).overtone(i).inOctave(octave), 500)
                 }
             }
         }

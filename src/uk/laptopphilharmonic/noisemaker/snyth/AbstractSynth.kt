@@ -1,6 +1,6 @@
 package uk.laptopphilharmonic.noisemaker.snyth
 
-import uk.laptopphilharmonic.noisemaker.Frequency
+import uk.laptopphilharmonic.noisemaker.frequency.Frequency
 import javax.sound.sampled.SourceDataLine
 
 interface Synth {

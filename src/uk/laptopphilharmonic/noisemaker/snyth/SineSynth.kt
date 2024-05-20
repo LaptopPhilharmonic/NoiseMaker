@@ -1,6 +1,6 @@
 package uk.laptopphilharmonic.noisemaker.snyth
 
-import uk.laptopphilharmonic.noisemaker.Frequency
+import uk.laptopphilharmonic.noisemaker.frequency.Frequency
 import kotlin.math.sin
 
 class SineSynth(override val sampleRate: Int = 32 * 1024) : AbstractSynth(sampleRate) {

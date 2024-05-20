@@ -1,6 +1,6 @@
-package uk.laptopphilharmonic.noisemaker
+package uk.laptopphilharmonic.noisemaker.frequency
 
-class FrequencyRange(
+open class FrequencyRange(
     frequency1: Frequency,
     frequency2: Frequency,
 ) {
