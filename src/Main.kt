@@ -1,25 +1,32 @@
 import uk.laptopphilharmonic.noisemaker.NoiseMaker
-import uk.laptopphilharmonic.noisemaker.frequency.OctaveRange
-import uk.laptopphilharmonic.noisemaker.frequency.hz
+import uk.laptopphilharmonic.noisemaker.frequency.*
 
 fun main() {
-    val tonic = 110.hz
-    val octave = OctaveRange(440.hz)
+    val tonic = 220.hz
+    val subtonic = (tonic / 3) * 2
+
+    val tonicMajor: Triad = MajorTriad(tonic)
+    val subtonicMinor: Triad = MinorTriad(subtonic)
+    val dominant: Triad = MajorTriad(tonicMajor.dominant)
+    val chords = setOf(tonicMajor, subtonicMinor, dominant)
+
+    val progression = buildList{ for (i in 1..32) { add(chords.random()) } }
+    val progressionOctave2 = progression.map { it * 2 }
 
     with(NoiseMaker()) {
         voice {
-            for (fundamental in listOf(2.0, 3.0, 2.0, 1.0 / 3.0, 2.0, 3.0, 2.0)) {
-                for (i in 2..5) {
-                    tone(tonic.overtone(fundamental).overtone(i).inOctave(octave), 500)
-                }
+            for(i in 1..32) {
+                tone(progression[i - 1].random(), 1000, 0.5)
             }
         }
 
         voice {
-            for (fundamental in listOf(2.0, 3.0, 2.0, 1.0 / 3.0, 2.0, 3.0, 2.0)) {
-                for (i in 5 downTo 2) {
-                    tone(tonic.overtone(fundamental).overtone(i).inOctave(octave), 500)
-                }
+            for(i in 1..32) {
+                val chord = progressionOctave2[i - 1]
+                tone(chord.random(), 250, 0.5)
+                tone(chord.random(), 250, 0.5)
+                tone(chord.random(), 250, 0.5)
+                tone(chord.random(), 250, 0.5)
             }
         }
     }
