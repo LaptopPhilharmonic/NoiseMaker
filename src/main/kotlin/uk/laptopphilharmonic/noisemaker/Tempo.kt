@@ -3,10 +3,13 @@ package uk.laptopphilharmonic.noisemaker
 data class Tempo(
     val bpm: Double
 ) {
-    val beatMillis: Double = (60 / bpm) * 1000
+    val beat: Int = ((60 / bpm) * 1000).toInt()
+    val halfBeat: Int = ((30 / bpm) * 1000).toInt()
+    val thirdBeat: Int = ((20 / bpm) * 1000).toInt()
+    val quarterBeat: Int = ((15 / bpm) * 1000).toInt()
 }
 
-fun Int.bpm() = Tempo(this.toDouble())
-fun Long.bpm() = Tempo(this.toDouble())
-fun Float.bpm() = Tempo(this.toDouble())
-fun Double.bpm() = Tempo(this)
+val Int.bpm get() = Tempo(this.toDouble())
+val Long.bpm get() = Tempo(this.toDouble())
+val Float.bpm get() = Tempo(this.toDouble())
+val Double.bpm get() = Tempo(this)
