@@ -6,6 +6,7 @@ import kotlin.math.pow
 
 interface Synth {
     fun tone(frequency: Frequency, millis: Int, line: SourceDataLine, velocity: Double)
+    var envelope: Envelope?
 }
 
 abstract class AbstractSynth(
@@ -14,6 +15,7 @@ abstract class AbstractSynth(
 ): Synth {
     val bytesPerSample: Int = bitDepth / 8
     val maxVolume = 2.0.pow(((bytesPerSample * 8) - 1).toDouble()) - 1
+    override var envelope: Envelope? = null
 
     override fun tone(frequency: Frequency, millis: Int, line: SourceDataLine, velocity: Double) {
         val toneBuffer = createBuffer(frequency, millis, velocity)
@@ -33,10 +35,41 @@ abstract class AbstractSynth(
         val samples = ((millis.toDouble() / 1000.0) * samplesPerSecond.toDouble()).toInt()
         val samplesPerWave = (samplesPerSecond.toDouble() / frequency.hz)
         val bytes = ByteArray(samples * bytesPerSample)
+        val millisPerSample = millis.toDouble() / samples.toDouble()
         val velocityFloat = velocity * maxVolume
 
+        // We take a snapshot of these when the wave starts to avoid any confusion if the envelope is changed later
+        val attack = (envelope?.attack ?: 0).toDouble()
+        val decay = (envelope?.decay ?: 0).toDouble()
+        val decayEnd = attack + decay
+        val sustainVelocity = (envelope?.sustain ?: 1.0) * velocityFloat
+        val sustainVelocityDiff = velocityFloat - sustainVelocity
+        val release = (envelope?.release ?: 0).toDouble()
+
         for (i in bytes.indices step bytesPerSample) {
-            val volume = (waveFormSample(((i / bytesPerSample) % samplesPerWave).toInt(), samplesPerWave) * velocityFloat).toInt()
+            val sampleIndex = i / bytesPerSample
+            val currentMillis = millisPerSample * sampleIndex
+            val envelopeVelocity = if (envelope != null) {
+                if (currentMillis < attack) {
+                    velocityFloat * (currentMillis / attack)
+                } else if (currentMillis < decayEnd) {
+                    velocityFloat - (sustainVelocityDiff * ((currentMillis - attack) / decayEnd))
+                } else {
+                    sustainVelocity
+                }
+            } else {
+                velocityFloat
+            }
+
+            var volume = (waveFormSample((sampleIndex % samplesPerWave).toInt(), samplesPerWave) * envelopeVelocity).toInt()
+
+
+            // Without this you'll get horrible popping at the end of every note
+            val endProximity = millis - currentMillis
+            if (endProximity < 5) {
+                volume = (volume * (endProximity / 5)).toInt()
+            }
+
             for (b in 1..bytesPerSample) {
                 bytes[i + bytesPerSample - b] = (volume shr (8 * (b - 1))).toByte()
             }

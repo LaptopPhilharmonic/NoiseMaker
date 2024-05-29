@@ -1,4 +1,4 @@
-package uk.laptopphilharmonic.noisemaker
+package uk.laptopphilharmonic.noisemaker.tempo
 
 data class Tempo(
     val bpm: Double

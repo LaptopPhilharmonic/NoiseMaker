@@ -1,5 +1,9 @@
 package uk.laptopphilharmonic.noisemaker.frequency
 
+/**
+ * A frequency in hz (how many times per second your wave should loop). In standard modern tuning, A4 is 440hz
+ * @param hz - The frequency. Must be > 0 to avoid math problems
+ */
 data class Frequency(
     val hz: Double
 ) {
@@ -7,21 +11,19 @@ data class Frequency(
         require(hz > 0.0)
     }
 
-    fun overtone(multiple: Double): Frequency = Frequency(this.hz * multiple)
-    fun overtone(multiple: Int): Frequency = this.overtone(multiple.toDouble())
-    fun undertone(divisor: Double): Frequency = Frequency(this.hz / divisor)
-    fun undertone(divisor: Int): Frequency = this.undertone(divisor.toDouble())
-
     operator fun times(i: Int) = Frequency(this.hz * i)
     operator fun times(d: Double) = Frequency(this.hz * d)
     operator fun div(i: Int) = Frequency(this.hz / i)
     operator fun div(d: Double) = Frequency(this.hz / d)
 
+    /**
+     * Returns this frequency transposed up/down octaves until it's within the range provided.
+     * */
     fun inOctave(octaveRange: OctaveRange): Frequency {
         return if (hz < octaveRange.lower.hz) {
-           this.overtone(2.0).inOctave(octaveRange)
+            (this * 2).inOctave(octaveRange)
         } else if (hz > octaveRange.upper.hz) {
-            this.undertone(2.0).inOctave(octaveRange)
+            (this / 2).inOctave(octaveRange)
         } else this
     }
 }

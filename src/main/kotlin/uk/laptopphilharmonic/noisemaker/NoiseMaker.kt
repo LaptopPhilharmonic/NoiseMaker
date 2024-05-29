@@ -1,8 +1,6 @@
 package uk.laptopphilharmonic.noisemaker
 
-import uk.laptopphilharmonic.noisemaker.synth.SineSynth
-import uk.laptopphilharmonic.noisemaker.synth.Synth
-import uk.laptopphilharmonic.noisemaker.synth.TriangleSynth
+import uk.laptopphilharmonic.noisemaker.synth.*
 import javax.sound.sampled.AudioFormat
 import kotlin.concurrent.thread
 
@@ -23,6 +21,8 @@ class NoiseMaker(
 
     fun sineSynth() = SineSynth(sampleRate, bitDepth)
     fun triangleSynth() = TriangleSynth(sampleRate, bitDepth)
+    fun squareSynth() = SquareSynth(sampleRate, bitDepth)
+    fun sawSynth() = SawSynth(sampleRate, bitDepth)
 
     companion object {
         const val SAMPLE_RATE_16 = 16 * 1024
