@@ -33,7 +33,7 @@ abstract class AbstractSynth(
         require(velocity in 0.0..1.0)
 
         val samples = ((millis.toDouble() / 1000.0) * samplesPerSecond.toDouble()).toInt()
-        val samplesPerWave = (samplesPerSecond.toDouble() / frequency.hz)
+        val samplesPerWave = (samplesPerSecond.toDouble() / frequency.hz) * 8 // Why is it times 8? Need to figure this out
         val bytes = ByteArray(samples * bytesPerSample)
         val millisPerSample = millis.toDouble() / samples.toDouble()
         val velocityFloat = velocity * maxVolume
@@ -62,7 +62,6 @@ abstract class AbstractSynth(
             }
 
             var volume = (waveFormSample((sampleIndex % samplesPerWave).toInt(), samplesPerWave) * envelopeVelocity).toInt()
-
 
             // Without this you'll get horrible popping at the end of every note
             val endProximity = millis - currentMillis

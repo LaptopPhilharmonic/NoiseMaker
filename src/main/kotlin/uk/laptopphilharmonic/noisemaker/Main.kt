@@ -1,6 +1,7 @@
 package uk.laptopphilharmonic.noisemaker
 
 import uk.laptopphilharmonic.noisemaker.frequency.OctaveRange
+import uk.laptopphilharmonic.noisemaker.frequency.TwelveTone
 import uk.laptopphilharmonic.noisemaker.frequency.hz
 import uk.laptopphilharmonic.noisemaker.synth.Envelope
 import uk.laptopphilharmonic.noisemaker.tempo.bpm
@@ -24,14 +25,18 @@ fun main() {
     val notes = listOf(tonic, tonic * 3, tonic * 5, tonic * 7, tonic * 11, tonic * 13).map { it.inOctave(OctaveRange(tonic)) }
     val notes2 = notes.map { (it * 3).inOctave(OctaveRange(tonic * 2)) }
 
-    val tempo = 20.bpm
+    val tempo = 120.bpm
     val velocity = 0.1
 
+    val tt = TwelveTone()
+
+    val testNotes = listOf(tt.A4, tt.Csh5, tt.E5, tt.A5, tt.A4, tt.E4, tt.Csh4, tt.A3)
+
     with(NoiseMaker()) {
-        voice(sineSynth()) {
+        voice(triangleSynth()) {
             synth.envelope = Envelope(5, 1000, 0.2, 0)
-            for (i in 1..32) {
-                tone(notes.random(), tempo.beat, velocity)
+            testNotes.forEach {
+                tone(it, tempo.beat, velocity)
             }
         }
 //        voice(sineSynth()) {
