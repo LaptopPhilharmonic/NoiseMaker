@@ -1,17 +1,16 @@
 package uk.laptopphilharmonic.noisemaker.synth
 
-class TriangleSynth(
-    override val samplesPerSecond: Int,
-    bitDepth: Int
-) : AbstractSynth(samplesPerSecond, bitDepth) {
+import uk.laptopphilharmonic.noisemaker.piece.Note
 
-    override fun waveFormSample(sampleIndex: Int, samplesPerWave: Double): Double {
-        val halfWave = samplesPerWave / 2
-        val halfIndex = sampleIndex % (halfWave)
-        return if (sampleIndex < halfWave) {
-            1 - ((halfIndex / halfWave) * 2)
+class TriangleSynth : AbstractSynth() {
+    override fun waveFormForNoteAtTime(note: Note, timeIntoNote: Double): Double {
+        val currentFrequency = note.frequencyAt(timeIntoNote)
+        val halfWave = currentFrequency.waveLengthMillis / 2
+        val timeIntoHalfWave = timeIntoNote % halfWave
+        return if (timeIntoNote % currentFrequency.waveLengthMillis < halfWave) {
+            1 - ((timeIntoHalfWave / halfWave) * 2)
         } else {
-            -1 + ((halfIndex / halfWave) * 2)
+            - 1 + ((timeIntoHalfWave / halfWave) * 2)
         }
     }
 }

@@ -1,12 +1,11 @@
 package uk.laptopphilharmonic.noisemaker.synth
 
-class SquareSynth(
-    override val samplesPerSecond: Int,
-    bitDepth: Int
-) : AbstractSynth(samplesPerSecond, bitDepth) {
+import uk.laptopphilharmonic.noisemaker.piece.Note
 
-    override fun waveFormSample(sampleIndex: Int, samplesPerWave: Double): Double {
-        return if (sampleIndex < samplesPerWave / 2) {
+class SquareSynth : AbstractSynth() {
+    override fun waveFormForNoteAtTime(note: Note, timeIntoNote: Double): Double {
+        val currentFrequency = note.frequencyAt(timeIntoNote)
+        return if (timeIntoNote % currentFrequency.waveLengthMillis < currentFrequency.waveLengthMillis / 2) {
             1.0
         } else {
             -1.0

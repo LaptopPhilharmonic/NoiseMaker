@@ -11,6 +11,8 @@ data class Frequency(
         require(hz > 0.0)
     }
 
+    val waveLengthMillis = 2000.0 / hz // Why is it 2 seconds and not 1?
+
     operator fun times(i: Int) = Frequency(this.hz * i)
     operator fun times(d: Double) = Frequency(this.hz * d)
     operator fun div(i: Int) = Frequency(this.hz / i)
