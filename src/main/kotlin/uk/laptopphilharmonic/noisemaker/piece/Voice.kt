@@ -11,7 +11,23 @@ class Voice(
 ) {
     val allNotes = mutableListOf<Note>()
 
-    fun note(start: Int, end: Int, startFrequency: Frequency, velocity: Double = 1.0, endFrequency: Frequency? = null) {
-        this.allNotes.addLast(Note(start, end, startFrequency, velocity, endFrequency))
+    fun note(time: Pair<Double, Double>, frequency: Pair<Frequency, Frequency>, velocity: Pair<Double, Double>) {
+        this.allNotes.addLast(Note(time, frequency, velocity))
+    }
+
+    fun note(time: Pair<Double, Double>, frequency: Frequency, velocity: Pair<Double, Double>) {
+        this.allNotes.addLast(Note(time, frequency, velocity))
+    }
+
+    fun note(time: Pair<Double, Double>, frequency: Pair<Frequency, Frequency>, velocity: Double) {
+        this.allNotes.addLast(Note(time, frequency, velocity))
+    }
+
+    fun note(time: Pair<Double, Double>, frequency: Frequency, velocity: Double) {
+        this.allNotes.addLast(Note(time, frequency, velocity))
+    }
+
+    fun notes(vararg notes: Note) {
+        notes.forEach { this.allNotes.addLast(it) }
     }
 }

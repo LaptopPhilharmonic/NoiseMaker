@@ -23,9 +23,9 @@ abstract class AbstractSynth: Synth {
      * @param time - how many milliseconds into the piece we are
      * */
     override fun volumeForNoteAtTime(note: Note, time: Double): Double {
-        val timeIntoNote = time - note.start
+        val timeIntoNote = time - note.startTime
         require(timeIntoNote >= 0) // if you're asking for info on a note that hasn't started you're doing it wrong
-        val velocity = note.velocity
+        val velocity = note.velocityAt(timeIntoNote)
 
         val envelopeVelocity: Double = if (envelope != null) {
             val sustain = envelope?.sustain ?: 1.0
