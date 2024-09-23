@@ -2,6 +2,7 @@ package uk.laptopphilharmonic.noisemaker
 
 import uk.laptopphilharmonic.noisemaker.frequency.Frequency
 import uk.laptopphilharmonic.noisemaker.frequency.OctaveRange
+import kotlin.random.Random
 
 open class Fifth(baseFrequency: Frequency) {
     val tonic = baseFrequency
@@ -36,4 +37,12 @@ class MinorTriad(baseFrequency: Frequency): AbstractTriad(baseFrequency), Triad 
     fun toMajor() = MajorTriad(this.tonic)
     override operator fun times(i: Int) = MinorTriad(this.tonic * i)
     override operator fun div(i: Int) = MinorTriad(this.tonic / i)
+}
+
+fun Frequency.randomOvertone(limit: Int = 8): Frequency {
+    return this * Random.nextInt(1, limit)
+}
+
+fun Frequency.randomUndertone(limit: Int = 8): Frequency {
+    return this / Random.nextInt(1, limit)
 }

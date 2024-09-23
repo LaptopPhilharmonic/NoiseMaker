@@ -5,7 +5,7 @@ class Bar(
     val beats: Int,
     val startTime: Double,
     val tempo: BPM,
-    val previous: Bar? = null,
+    private val bars: Bars,
 ) {
     /** Get the time in milliseconds of the start of the beat specified in this bar
      * @param n - 0-indexed number of the beat in question. Decimals welcome.
@@ -20,6 +20,8 @@ class Bar(
 
     /** The time in milliseconds of the end of the bar */
     val endOfBar get(): Double = startTime + (beats * tempo.beatLength)
+    val nextBar get(): Bar? = bars.orderedBars.getOrNull(number + 1)
+    val previousBar get(): Bar? = bars.orderedBars.getOrNull(number - 1)
 }
 
 /** Helper class to make it easier to refer to times in your piece */
@@ -57,7 +59,7 @@ class Bars(
             beats,
             startTime = (mostRecent?.startTime ?: 0.0) + (mostRecentBeats * mostRecentTempo.beatLength),
             tempo,
-            previous = orderedBars.lastOrNull()
+            bars = this
         )
         orderedBars += bar
     }
