@@ -2,11 +2,23 @@ package uk.laptopphilharmonic.noisemaker.synth
 
 import uk.laptopphilharmonic.noisemaker.piece.Note
 
+/** A Synthesiser is a fun tool for creating different electronic instruments by generating wave forms */
 interface Synth {
+    /**
+     * Get the volume for a note played by this synthesiser at a particular time into the piece. The volume returned
+     * will be between 0.0 (silence) to 1.0 (max volume)
+     * @param note - the Note in question
+     * @param time - how far into the piece we are in milliseconds
+     */
     fun volumeForNoteAtTime(note: Note, time: Double): Double
+    /**
+     * You can assign an Envelope to a synthesizer to control the volumes and timings of the attack, decay, sustain
+     * and release of notes played
+     */
     var envelope: Envelope?
 }
 
+/** A class for all Synths to inherit from. */
 abstract class AbstractSynth: Synth {
     override var envelope: Envelope? = null
 

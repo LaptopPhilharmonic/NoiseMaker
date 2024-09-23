@@ -1,10 +1,16 @@
 package uk.laptopphilharmonic.noisemaker.piece
 
+/** A helper class for managing the timing of notes in your pieec */
 class Bar(
+    /** The number, in order, or this bar */
     val number: Int,
+    /** How many beats per bar */
     val beats: Int,
+    /** At white time (in milliseconds) after the start of the piece this bar begins */
     val startTime: Double,
+    /** The tempo in Beats Per Minute (BPM) for this bar */
     val tempo: BPM,
+    /** The Bars class instance used to manage this bar */
     private val bars: Bars,
 ) {
     /** Get the time in milliseconds of the start of the beat specified in this bar
@@ -20,7 +26,9 @@ class Bar(
 
     /** The time in milliseconds of the end of the bar */
     val endOfBar get(): Double = startTime + (beats * tempo.beatLength)
+    /** The next bar in this sequence of Bars, if one exists */
     val nextBar get(): Bar? = bars.orderedBars.getOrNull(number + 1)
+    /** The previous bar in this sequence of Bars, if one exists */
     val previousBar get(): Bar? = bars.orderedBars.getOrNull(number - 1)
 }
 
@@ -38,6 +46,7 @@ class Bars(
         startingTempo = data[0].tempo
     }
 
+    /** All bars listed in order */
     val orderedBars: MutableList<Bar> = mutableListOf()
 
     private val mostRecent: Bar? get() = orderedBars.lastOrNull()
@@ -64,10 +73,12 @@ class Bars(
         orderedBars += bar
     }
 
+    /** Syntactic sugar for this.orderedBars.forEach */
     fun forEach(fn: (b: Bar) -> Unit) {
         this.orderedBars.forEach(fn)
     }
 
+    /** Syntactic sugar so can run methods with each bar in order assigned to the "this" keyword */
     fun withEach(fn: Bar.() -> Unit) {
         this.orderedBars.forEach { it.fn() }
     }

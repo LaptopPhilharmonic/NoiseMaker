@@ -3,12 +3,19 @@ package uk.laptopphilharmonic.noisemaker.piece
 import uk.laptopphilharmonic.noisemaker.synth.SineSynth
 import uk.laptopphilharmonic.noisemaker.synth.Synth
 
-class Piece(
-) {
+/** The container for all data in your piece, to be passed to a NoiseMaker instance for playing/export */
+class Piece {
+    /** All the Voice instances attached to this Piece */
     val allVoices = mutableListOf<Voice>()
     /** Tempo in beats per minute (BPM) */
     var tempo = 120.0
 
+    /**
+     * Creates a new Voice in this piece that you can use to play notes
+     * @param synth - What type of synthesizer to use (default is SineSynth)
+     * @param volume - How loud to play notes in this synth (0.0 = silent, 1.0 = maximum possible)
+     * @param pan - Where to place this if it's a stereo mix (-1.0 = full left, 1.0 = full right)
+     */
     fun addVoice(
         synth: Synth = SineSynth(),
         volume: Double = 1.0,

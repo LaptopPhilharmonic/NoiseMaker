@@ -1,7 +1,6 @@
 package uk.laptopphilharmonic.noisemaker
 
 import uk.laptopphilharmonic.noisemaker.piece.Piece
-import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -10,6 +9,7 @@ import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import kotlin.math.pow
 
+/** The main class of this project, for managing piece creation, playback and export to file */
 class NoiseMaker(
     /** Samples per second */
     val sampleRate: Int = SAMPLE_RATE_64,
@@ -22,12 +22,13 @@ class NoiseMaker(
     val bytesPerSample: Int = bitDepth / 8
     val maxVolume = (2.0.pow((bitDepth - 1).toDouble()) - 1).toInt()
 
+    /** A builder method for creating a new Piece */
     fun piece(music: Piece.() -> Unit) {
         val piece = Piece()
         piece.music()
     }
 
-    fun getAsBytes(piece: Piece, byteOrder: ByteOrder = ByteOrder.LITTLE_ENDIAN): ByteArray {
+    private fun getAsBytes(piece: Piece, byteOrder: ByteOrder = ByteOrder.LITTLE_ENDIAN): ByteArray {
         val totalSamples = ((piece.length / 1000.0) * sampleRate.toDouble()).toInt()
         val sampleLength = 1000.0 / sampleRate.toDouble()
         val samples = mutableListOf<Double>()
@@ -64,6 +65,10 @@ class NoiseMaker(
         return bytes
     }
 
+    /**
+     * Play your piece when the code runs
+     * @param piece - the piece to be played
+     */
     fun play(piece: Piece) {
         val bytes = getAsBytes(piece)
 
@@ -76,6 +81,11 @@ class NoiseMaker(
         }
     }
 
+    /**
+     * Export your piece as a raw .wav file
+     * @param piece - the piece to export
+     * @param fileName - the file name to save it as (in the generated-files directory of the project)
+     */
     fun saveToWav(piece: Piece, fileName: String) {
         val pieceBytes = getAsBytes(piece, ByteOrder.BIG_ENDIAN)
 

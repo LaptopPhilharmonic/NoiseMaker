@@ -2,6 +2,7 @@ package uk.laptopphilharmonic.noisemaker.synth
 
 import uk.laptopphilharmonic.noisemaker.piece.Note
 
+/** A triangle shaped wave with no curviness to it */
 class TriangleSynth : AbstractSynth() {
     override fun waveFormForNoteAtTime(note: Note, timeIntoNote: Double): Double {
         val currentFrequency = note.frequencyAt(timeIntoNote)
