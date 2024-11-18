@@ -8,17 +8,17 @@ package uk.laptopphilharmonic.noisemaker.synth
  * @param release - how long the note takes to fade to silence after being released
  */
 data class Envelope(
-    val attack: Int,
-    val decay: Int,
+    val attack: Double,
+    val decay: Double,
     val sustain: Double,
-    val release: Int,
+    val release: Double,
 ) {
     companion object {
         val default = Envelope(
-            attack=5, // Reduces the popping sound when a note starts
-            decay=0,
+            attack=5.0, // Reduces the popping sound when a note starts
+            decay=0.0,
             sustain=1.0,
-            release=0
+            release=0.0
         )
     }
 }

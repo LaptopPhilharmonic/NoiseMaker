@@ -14,14 +14,12 @@ class Piece {
      * Creates a new Voice in this piece that you can use to play notes
      * @param synth - What type of synthesizer to use (default is SineSynth)
      * @param volume - How loud to play notes in this synth (0.0 = silent, 1.0 = maximum possible)
-     * @param pan - Where to place this if it's a stereo mix (-1.0 = full left, 1.0 = full right)
      */
     fun addVoice(
         synth: Synth = SineSynth(),
         volume: Double = 1.0,
-        pan: Double = 0.0
     ): Voice {
-        val voice = Voice(this, synth, volume, pan)
+        val voice = Voice(this, synth, volume)
         allVoices.addLast(voice)
         return voice
     }
@@ -41,7 +39,7 @@ class Piece {
     fun notesPlayingAtTime(millis: Double): List<VoiceAndNote> =
         allVoices.flatMap { voice ->
             voice.allNotes.filter { note ->
-                note.startTime <= millis && (note.endTime + (voice.synth.envelope?.release ?: 0)) >= millis
+                note.startTime <= millis && (note.endTime + (voice.synth.envelope?.release ?: 0.0)) >= millis
             }.map { VoiceAndNote(voice, it) }
         }
 }

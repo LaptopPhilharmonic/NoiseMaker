@@ -13,16 +13,17 @@ class TwelveTone(a4Frequency: Frequency = 440.0.hz) {
     init {
         // A4 is note 69 in standard MIDI. We can work out all the other values using an algorithm based on this
         val tempList = mutableListOf<Frequency>()
+        val a4Over2 = a4Frequency / 2
 
         for (n in 0..127) {
             val diffFromA4 = 69 - n + 1 // Why plus 1? Need to figure this out
             val distanceFromA4 = abs(diffFromA4)
             if (diffFromA4 < 0) {
-                tempList.add(a4Frequency / (twoRoot12.pow(distanceFromA4)))
+                tempList.add(a4Over2 / (twoRoot12.pow(distanceFromA4)))
             } else if (diffFromA4 > 0) {
-                tempList.add(a4Frequency * (twoRoot12.pow(distanceFromA4)))
+                tempList.add(a4Over2 * (twoRoot12.pow(distanceFromA4)))
             } else {
-                tempList.add(a4Frequency)
+                tempList.add(a4Over2)
             }
         }
 

@@ -1,6 +1,7 @@
 package uk.laptopphilharmonic.noisemaker.synth
 
 import uk.laptopphilharmonic.noisemaker.piece.Note
+import kotlin.math.abs
 
 /** A Synthesiser is a fun tool for creating different electronic instruments by generating wave forms */
 interface Synth {
@@ -10,7 +11,16 @@ interface Synth {
      * @param note - the Note in question
      * @param time - how far into the piece we are in milliseconds
      */
-    fun volumeForNoteAtTime(note: Note, time: Double): Double
+    fun monoVolumeForNoteAtTime(note: Note, time: Double): Double
+
+    /**
+     * Get the left and right channel volume for a note played by this synthesiser at a particular time into the piece.
+     * The volume returned for each channel will be between 0.0 (silence) to 1.0 (max volume)
+     * @param note - the Note in question
+     * @param time - how far into the piece we are in milliseconds
+     */
+    fun stereoVolumeForNoteAtTime(note: Note, time: Double): StereoVolume
+
     /**
      * You can assign an Envelope to a synthesizer to control the volumes and timings of the attack, decay, sustain
      * and release of notes played
@@ -33,8 +43,8 @@ abstract class AbstractSynth: Synth {
      * Returns volume for this note at the time specified as -1 to 1 double
      * @param note - the note in question
      * @param time - how many milliseconds into the piece we are
-     * */
-    override fun volumeForNoteAtTime(note: Note, time: Double): Double {
+     */
+    override fun monoVolumeForNoteAtTime(note: Note, time: Double): Double {
         val timeIntoNote = time - note.startTime
         require(timeIntoNote >= 0) // if you're asking for info on a note that hasn't started you're doing it wrong
         val velocity = note.velocityAt(timeIntoNote)
@@ -72,4 +82,26 @@ abstract class AbstractSynth: Synth {
 
         return volume
     }
+
+    /**
+     * Returns volume for this note at the time specified as -1 to 1 double for left and right channels of stereo
+     * @param note - the note in question
+     * @param time - how many milliseconds into the piece we are
+     */
+    override fun stereoVolumeForNoteAtTime(note: Note, time: Double): StereoVolume {
+        val timeIntoNote = time - note.startTime
+        val totalVolume = monoVolumeForNoteAtTime(note, time)
+        val leftPercent = abs((note.panAt(timeIntoNote)) - 1.0) / 2.0
+        val rightPercent = abs((note.panAt(timeIntoNote)) + 1.0) / 2.0
+        return StereoVolume(
+            left = totalVolume * leftPercent,
+            right = totalVolume * rightPercent,
+        )
+    }
 }
+
+/** Handles stereo volume */
+data class StereoVolume(
+    val left: Double,
+    val right: Double
+)
